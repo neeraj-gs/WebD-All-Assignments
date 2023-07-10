@@ -121,6 +121,7 @@ app.get('/users/purchasedCourses', userAuthentication, (req, res) => {
   res.json({ purchasedCourses });
 });
 
+
 app.listen(3000, () => {
   console.log('Server is listening on port 3000');
 });
