@@ -110,12 +110,20 @@ app.get('/users/courses',userAuthentication, (req, res) => {
   
 });
 
-app.post('/users/courses/:courseId', (req, res) => {
+app.post('/users/courses/:courseId',userAuthentication ,  (req, res) => {
   // logic to purchase a course
+  var course = COURSES.find(c=>c.id === parseInt(req.params.id))
+  if(course){
+    req.user.purchasedCourses.push(parseInt(req.params.id));
+    res.json({message:`Course Purchase is Successful`})
+  }else{
+    res.json({message:`Course Not Found`})
+  }
 });
 
-app.get('/users/purchasedCourses', (req, res) => {
+app.get('/users/purchasedCourses',userAuthentication, (req, res) => {
   // logic to view purchased courses
+
 });
 
 app.listen(3000, () => {
