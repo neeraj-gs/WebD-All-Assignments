@@ -63,9 +63,13 @@ app.put('/admin/courses/:courseId',adminAuthentication , (req, res) => {
 
 });
 
-app.get('/admin/courses', (req, res) => {
+app.get('/admin/courses', adminAuthentication , (req, res) => {
   // logic to get all courses
+  res.send(COURSES)
 });
+
+
+
 
 // User routes
 app.post('/users/signup', (req, res) => {
