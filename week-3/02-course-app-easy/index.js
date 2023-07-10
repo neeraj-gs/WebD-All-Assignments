@@ -1,18 +1,15 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const app = express();
-const port = 3000;
+const bodyParser = require('body-parser')
 
 app.use(express.json());
+app.use(bodyParser.json())
 
 let ADMINS = [];
 let USERS = [];
 let COURSES = [];
 
-
-// Admin routes
-//Admin authentication middleware that is passed in header everytime a admin logins
-const adminAuthentication = (req, res, next) => { //middleware for authentication of admin
+const adminAuthentication = (req, res, next) => {
   const { username, password } = req.headers;
 
   const admin = ADMINS.find(a => a.username === username && a.password === password);
@@ -23,7 +20,17 @@ const adminAuthentication = (req, res, next) => { //middleware for authenticatio
   }
 };
 
-//admin sign up
+const userAuthentication = (req, res, next) => {
+  const { username, password } = req.headers;
+  const user = USERS.find(u => u.username === username && u.password === password);
+  if (user) {
+    req.user = user;  // Add user object to the request
+    next();
+  } else {
+    res.status(403).json({ message: 'User authentication failed' });
+  }
+};
+
 app.post('/admin/signup', (req, res) => {
   const admin = req.body;
   const existingAdmin = ADMINS.find(a => a.username === admin.username);
@@ -35,95 +42,83 @@ app.post('/admin/signup', (req, res) => {
   }
 });
 
-//admin login
 app.post('/admin/login', adminAuthentication, (req, res) => {
   res.json({ message: 'Logged in successfully' });
 });
 
-
-app.post('/admin/courses',adminAuthentication, (req, res) => {
-  // logic to create a course
+app.post('/admin/courses', adminAuthentication, (req, res) => {
   const course = req.body;
-  course.id = Date.now(); //using timestamps for id
+
+  course.id = Date.now(); // use timestamp as course ID
   COURSES.push(course);
-  res.json(
-    { message: 'Course created successfully', 
-    courseId: course.id })
+  res.json({ message: 'Course created successfully', courseId: course.id });
 });
 
-app.put('/admin/courses/:courseId',adminAuthentication , (req, res) => {
-  // logic to edit a course
-  var course = COURSES.find(c=>c.id === parseInt(req.params.courseId))
-  if(course){
-    Object.assign(course,req.body);
-    res.json({ message: 'Course updated successfully' })
-  }else{
-    res.status(404).send('Course Not Found')
+app.put('/admin/courses/:courseId', adminAuthentication, (req, res) => {
+  const courseId = parseInt(req.params.courseId);
+  const course = COURSES.find(c => c.id === courseId);
+  if (course) {
+    Object.assign(course, req.body);
+    res.json({ message: 'Course updated successfully' });
+  } else {
+    res.status(404).json({ message: 'Course not found' });
   }
-
 });
 
-app.get('/admin/courses', adminAuthentication , (req, res) => {
-  // logic to get all courses
-  res.send(COURSES)
+app.get('/admin/courses', adminAuthentication, (req, res) => {
+  res.json({ courses: COURSES });
 });
 
-
-
-const userAuthentication = (req,res,next)=>{
-  const {username , password} = req.headers;
-
-  const user = USERS.find(u => u.username === username && u.password === password)
-  if(user){
-    next()
-  }else{
-    res.status(403).json({message:`User Authentication Failed`})
-  }
-}
-
-
-// User routes
 app.post('/users/signup', (req, res) => {
-  // logic to sign up user
-  var user = {
-    username:req.body.username,
-    password:req.body.password
+  // const user = {...req.body, purchasedCourses: []};
+  const user = {
+    username: req.body.username,
+    password: req.body.password,
+    purchasedCourses: []
   }
-  var u = USERS.find(us => us.username === user.username && us.password===user.password)
-  if(u){
-    res.json({message:`User Already Exists`})
+  USERS.push(user);
+  res.json({ message: 'User created successfully' });
+});
+
+app.post('/users/login', userAuthentication, (req, res) => {
+  res.json({ message: 'Logged in successfully' });
+});
+
+app.get('/users/courses', userAuthentication, (req, res) => {
+  // COURSES.filter(c => c.published)
+  let filteredCourses = [];
+  for (let i = 0; i<COURSES.length; i++) {
+    if (COURSES[i].published) {
+      filteredCourses.push(COURSES[i]);
+    }
   }
-  else{
-    USERS.push(user);
-    res.json({message:`User Created Successfully`})
+  res.json({ courses: filteredCourses });
+});
+
+app.post('/users/courses/:courseId', userAuthentication, (req, res) => {
+  const courseId = Number(req.params.courseId);
+  const course = COURSES.find(c => c.id === courseId && c.published);
+  if (course) {
+    req.user.purchasedCourses.push(courseId);
+    res.json({ message: 'Course purchased successfully' });
+  } else {
+    res.status(404).json({ message: 'Course not found or not available' });
   }
 });
 
-app.post('/users/login',userAuthentication, (req, res) => {
-  // logic to log in user
-  res.json({mesage:`Login Successfuly by User`})
-});
-
-app.get('/users/courses',userAuthentication, (req, res) => {
-  // logic to list all courses
-  res.send(COURSES)
-  
-});
-
-app.post('/users/courses/:courseId',userAuthentication ,  (req, res) => {
-  // logic to purchase a course
-  var course = COURSES.find(c=>c.id === parseInt(req.params.id))
-  if(course){
-    req.user.purchasedCourses.push(parseInt(req.params.id));
-    res.json({message:`Course Purchase is Successful`})
-  }else{
-    res.json({message:`Course Not Found`})
+app.get('/users/purchasedCourses', userAuthentication, (req, res) => {
+  // const purchasedCourses = COURSES.filter(c => req.user.purchasedCourses.includes(c.id));
+  // We need to extract the complete course object from COURSES
+  // which have ids which are present in req.user.purchasedCourses
+  var purchasedCourseIds = req.user.purchasedCourses; [1, 4];
+  var purchasedCourses = [];
+  for (let i = 0; i<COURSES.length; i++) {
+    if (purchasedCourseIds.indexOf(COURSES[i].id) !== -1) {
+      purchasedCourses.push(COURSES[i]);
+    }
   }
-});
 
-app.get('/users/purchasedCourses',userAuthentication, (req, res) => {
-  // logic to view purchased courses
-
+  res.json({ purchasedCourses });
 });
 
 app.listen(3000, () => {
