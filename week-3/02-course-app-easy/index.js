@@ -1,5 +1,7 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
+const port = 3000;
 
 app.use(express.json());
 
@@ -10,6 +12,7 @@ let COURSES = [];
 // Admin routes
 app.post('/admin/signup', (req, res) => {
   // logic to sign up admin
+
 });
 
 app.post('/admin/login', (req, res) => {
