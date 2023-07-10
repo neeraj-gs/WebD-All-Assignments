@@ -75,6 +75,18 @@ app.get('/admin/courses', adminAuthentication , (req, res) => {
 // User routes
 app.post('/users/signup', (req, res) => {
   // logic to sign up user
+  var user = {
+    username:req.body.username,
+    password:req.body.password
+  }
+  var u = USERS.find(us => us.username === user.username && us.password===user.password)
+  if(u){
+    res.json({message:`User Already Exists`})
+  }
+  else{
+    USERS.push(user);
+    res.json({message:`User Created Successfully`})
+  }
 });
 
 app.post('/users/login', (req, res) => {
