@@ -9,7 +9,9 @@ let ADMINS = [];
 let USERS = [];
 let COURSES = [];
 
+
 // Admin routes
+//Admin authentication middleware that is passed in header everytime a admin logins
 const adminAuthentication = (req, res, next) => { //middleware for authentication of admin
   const { username, password } = req.headers;
 
@@ -38,8 +40,15 @@ app.post('/admin/login', adminAuthentication, (req, res) => {
   res.json({ message: 'Logged in successfully' });
 });
 
-app.post('/admin/courses', (req, res) => {
+
+app.post('/admin/courses',adminAuthentication, (req, res) => {
   // logic to create a course
+  const course = req.body;
+  course.id = Date.now(); //using timestamps for id
+  COURSES.push(course);
+  res.json(
+    { message: 'Course created successfully', 
+    courseId: course.id })
 });
 
 app.put('/admin/courses/:courseId', (req, res) => {
