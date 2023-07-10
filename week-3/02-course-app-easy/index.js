@@ -70,6 +70,16 @@ app.get('/admin/courses', adminAuthentication , (req, res) => {
 
 
 
+const userAuthentication = (req,res,next)=>{
+  const {username , password} = req.headers;
+
+  const user = USERS.find(u => u.username === username && u.password === password)
+  if(user){
+    next()
+  }else{
+    res.status(403).json({message:`User Authentication Failed`})
+  }
+}
 
 
 // User routes
