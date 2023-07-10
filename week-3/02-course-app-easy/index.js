@@ -12,6 +12,19 @@ let COURSES = [];
 // Admin routes
 app.post('/admin/signup', (req, res) => {
   // logic to sign up admin
+  var admin = {
+    username:req.body.username,
+    password:req.body.password
+  }
+  var e = ADMINS.find(a=>a.username === admin.username && a.password === admin.password);
+  if(e){
+    res.status(401).send(`Already Signed in Please login to your Account`);
+  }else{
+    ADMINS.push(admin);
+    res.status(200).send(admin)
+  }
+
+
 
 });
 
