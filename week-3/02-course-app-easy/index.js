@@ -51,8 +51,16 @@ app.post('/admin/courses',adminAuthentication, (req, res) => {
     courseId: course.id })
 });
 
-app.put('/admin/courses/:courseId', (req, res) => {
+app.put('/admin/courses/:courseId',adminAuthentication , (req, res) => {
   // logic to edit a course
+  var course = COURSES.find(c=>c.id === parseInt(req.params.courseId))
+  if(course){
+    Object.assign(course,req.body);
+    res.json({ message: 'Course updated successfully' })
+  }else{
+    res.status(404).send('Course Not Found')
+  }
+
 });
 
 app.get('/admin/courses', (req, res) => {
