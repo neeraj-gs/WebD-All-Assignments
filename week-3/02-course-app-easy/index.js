@@ -10,26 +10,32 @@ let USERS = [];
 let COURSES = [];
 
 // Admin routes
+const adminAuthentication = (req, res, next) => { //middleware for authentication of admin
+  const { username, password } = req.headers;
+
+  const admin = ADMINS.find(a => a.username === username && a.password === password);
+  if (admin) {
+    next();
+  } else {
+    res.status(403).json({ message: 'Admin authentication failed' });
+  }
+};
+
+//admin sign up
 app.post('/admin/signup', (req, res) => {
-  // logic to sign up admin
-  var admin = {
-    username:req.body.username,
-    password:req.body.password
-  }
-  var e = ADMINS.find(a=>a.username === admin.username && a.password === admin.password);
-  if(e){
-    res.status(401).send(`Already Signed in Please login to your Account`);
-  }else{
+  const admin = req.body;
+  const existingAdmin = ADMINS.find(a => a.username === admin.username);
+  if (existingAdmin) {
+    res.status(403).json({ message: 'Admin already exists' });
+  } else {
     ADMINS.push(admin);
-    res.status(200).send(admin)
+    res.json({ message: 'Admin created successfully' });
   }
-
-
-
 });
 
-app.post('/admin/login', (req, res) => {
-  // logic to log in admin
+//admin login
+app.post('/admin/login', adminAuthentication, (req, res) => {
+  res.json({ message: 'Logged in successfully' });
 });
 
 app.post('/admin/courses', (req, res) => {
