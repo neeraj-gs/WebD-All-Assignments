@@ -115,12 +115,21 @@ app.post('/users/signup', (req, res) => {
   }
   else{
     var token = generateJwt(user);
+    USERS.push(user);
     res.status(200).json({message:`User Creted Successfully`,token})
+    
   }
 });
 
 app.post('/users/login', (req, res) => {
-  // logic to log in user
+  const { username, password } = req.headers;
+  const user = USERS.find(u => u.username === username && u.password === password);
+  if (user) {
+    const token = generateJwt(user);
+    res.json({ message: 'Logged in successfully', token });
+  } else {
+    res.status(403).json({ message: 'User authentication failed' });
+  }
 });
 
 app.get('/users/courses', (req, res) => {
