@@ -103,6 +103,8 @@ app.get('/admin/courses', authenticateJwt, (req, res) => {
   res.send(COURSES)
 });
 
+
+
 // User routes
 app.post('/users/signup', (req, res) => {
   // logic to sign up user
