@@ -58,6 +58,18 @@ app.post('/admin/signup', (req, res) => {
 
 app.post('/admin/login', (req, res) => {
   // logic to log in admin
+  const {username , password} = req.headers;
+  const admin = ADMINS.find(a=>a.username === username && a.password===password)
+
+  if(admin){
+    var token = generateJwt(admin)
+    res.status(200).json({
+      message:`Loggin In Successfully`,token
+    })
+  }
+  else{
+    res.json({message:`Authorization Failed`})
+  }
 });
 
 app.post('/admin/courses', (req, res) => {
