@@ -72,8 +72,12 @@ app.post('/admin/login', (req, res) => {
   }
 });
 
-app.post('/admin/courses', (req, res) => {
+app.post('/admin/courses', authenticateJwt ,(req, res) => {
   // logic to create a course
+  const course = require.body;
+  var id=COURSES.length+1;
+  COURSES.push(course)
+  res.json({mesage:`Course Created Successfully`,courseId:id})
 });
 
 app.put('/admin/courses/:courseId', (req, res) => {
