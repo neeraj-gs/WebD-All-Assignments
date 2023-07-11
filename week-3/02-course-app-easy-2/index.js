@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const port = 3000;
-const jwt = require('jasonwebtoken')
+const jwt = require('jsonwebtoken')
 const bodyParser = require('body-parser');
 
 
@@ -12,10 +12,17 @@ let ADMINS = [];
 let USERS = [];
 let COURSES = [];
 
-// Admin routes
-app.post('/admin/signup', (req, res) => {
-  // logic to sign up admin
-});
+
+var SECRET_KEY = "MySecretKey"
+
+const generateJwt = (user)=>{
+  const payload = {username:user.username}
+  return jwt.sign(payload , SECRET_KEY ,{expiresIn:'1h'})
+}
+
+
+
+
 
 app.post('/admin/login', (req, res) => {
   // logic to log in admin
