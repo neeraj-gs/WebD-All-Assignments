@@ -108,6 +108,15 @@ app.get('/admin/courses', authenticateJwt, (req, res) => {
 // User routes
 app.post('/users/signup', (req, res) => {
   // logic to sign up user
+  const user = req.body;
+  const us = USERS.find(u=>u.username === user.username)
+  if(us){
+    res.status(401).json({message:`User already Exits`})
+  }
+  else{
+    var token = generateJwt(user);
+    res.status(200).json({message:`User Creted Successfully`,token})
+  }
 });
 
 app.post('/users/login', (req, res) => {
