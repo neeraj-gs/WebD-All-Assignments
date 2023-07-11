@@ -158,8 +158,14 @@ app.post('/users/courses/:courseId',authenticateJwt, (req, res) => {
 
 });
 
-app.get('/users/purchasedCourses', (req, res) => {
+app.get('/users/purchasedCourses', authenticateJwt ,(req, res) => {
   // logic to view purchased courses
+  const user = USERS.find(u => u.username === req.user.username);
+  if (user && user.purchasedCourses) {
+    res.json({ purchasedCourses: user.purchasedCourses });
+  } else {
+    res.status(404).json({ message: 'No courses purchased' });
+  }
 });
 
 app.listen(port, () => {
