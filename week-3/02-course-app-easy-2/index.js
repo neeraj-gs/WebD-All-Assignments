@@ -20,6 +20,24 @@ const generateJwt = (user)=>{
   return jwt.sign(payload , SECRET_KEY ,{expiresIn:'1h'})
 }
 
+const authenticateJwt = (req,res,next)=>{
+  const authorization = req.headers.authorization;
+  if(authorization){
+    const token = authorization.split(' ')[1];
+
+    jwt.verify(token,SECRET_KEY,(err,user)=>{
+      if(err){
+        res.status(404)
+      }
+      req.user = user;
+      next();
+    })
+  }
+  else{
+    res.status(401)
+  }
+
+}
 
 
 // Admin routes
