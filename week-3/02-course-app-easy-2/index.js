@@ -98,8 +98,9 @@ app.put('/admin/courses/:courseId',authenticateJwt, (req, res) => {
 
 });
 
-app.get('/admin/courses', (req, res) => {
+app.get('/admin/courses', authenticateJwt, (req, res) => {
   // logic to get all courses
+  res.send(COURSES)
 });
 
 // User routes
