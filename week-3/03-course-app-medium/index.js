@@ -112,6 +112,14 @@ app.post('/users/signup', (req, res) => {
 
 app.post('/users/login', (req, res) => {
   // logic to log in user
+  const {username,password} = req.headers;
+  var user = USERS.find(u=>u.username===username &&u.password===password)
+  if(user){
+    var token = jwt.sign({username,role:'user'},SECRET_KEY,{expiresIn:'1h'})
+    res.status(200).json({message:`User Logged in Successfully`,token})
+  }else{
+    res.status(404)
+  }
 });
 
 app.get('/users/courses', (req, res) => {
