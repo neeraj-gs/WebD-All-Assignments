@@ -8,6 +8,23 @@ const fs = require('fs');
 app.use(express.json());
 app.use(bodyParser.json());
 
+const authenticateJwt = (req,res,next)=>{
+  const authHeader = req.headers.authorization;
+  if(authHeader){
+    const token = authHeader.split(' ')[1];
+    jwt.verify(token,SECRET_KEY,(err,user)=>{
+      if(err){
+        res.status(404);
+      }
+      req.user = user; //Stores authenticated user in the request object
+      next();
+    })
+  }else{
+    res.status(404);
+  }
+
+}
+
 let ADMINS = [];
 let USERS = [];
 let COURSES = [];
@@ -43,7 +60,7 @@ app.post('/admin/login', (req, res) => {
   }
 });
 
-app.post('/admin/courses', (req, res) => {
+app.post('/admin/courses', authenticateJwt,(req, res) => {
   // logic to create a course
 });
 
