@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const port = 3000;
+const jwt = require('jsonwebtoken')
 
 app.use(express.json());
 app.use(bodyParser.json());
