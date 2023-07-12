@@ -73,3 +73,4 @@ window.setInterval(() => {
 
 //this is a better way to create a reconciler ,find the diff and then update thte diffrences 
 //it only applies diffs to tthe dom and does  not reset the dom
+//we are still getting the wentore dom int eh forst line which is an expensive one
