@@ -58,7 +58,7 @@ function createDomElements() {
 
 
 function updateVirtualDom(data) {
-    vDOM = data.map(item => {
+    vDOM = data.map(item => { //store cureent state and then create elements
         return {
           id: item.id,
           title: item.title,
@@ -77,7 +77,8 @@ window.setInterval(() => {
     })
   }
 
-  updateVirtualDom(todos);
+  updateVirtualDom(todos); //before calling crate dom elelenems we stoe this new data in a variable called vDOM
 }, 5000);
 
-
+//we are just storing the current state in hte global varible 
+//we are stillcalling from parent and it is still expensive
