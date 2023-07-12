@@ -57,6 +57,8 @@ function createDomElements(existingDOM, currentDOM) {
 
 function updateVirtualDom(data) {
   let existingDOM = [...vDOM]; // Save the existing state of vDOM
+  //the above is same as  pusinh vDOM each elemt one by one
+  //we copy the existing dom and then upadte thte varible 
   vDOM = data.map(item => {
     return {
       id: item.id,
@@ -64,7 +66,10 @@ function updateVirtualDom(data) {
       description: item.description
     };
   });
-  createDomElements(existingDOM, vDOM); // Pass the old and new vDOM to createDomElements
+  createDomElements(existingDOM, vDOM); // Pass the old and new vDOM to createDomElements 
+  //call with 2 ele and we dont have to get the children at teh top
+  //dont need to get all the children anymore as we already have the existing dom
+  //we consider doms as variables adn tehn findin diffs instead of comparing doms itself
 }
 
 window.setInterval(() => {
