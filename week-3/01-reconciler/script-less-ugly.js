@@ -3,13 +3,14 @@ function createDomElements(data) {
   var parentElement = document.getElementById("mainArea");
 
   // Get the current children of the parent element and convert it to an array
-  var currentChildren = Array.from(parentElement.children);
+  var currentChildren = Array.from(parentElement.children); //RETURNS AN EMPTU ARAY AS INITIALLY THERE ARE NO CHILDREN TO THE DIV
+  //gives the aray with children
 
   let added = 0, deleted = 0, updated = 0;
   // Process each item in the data array
   data.forEach(function(item) {
     // Check if a child with this ID already exists
-    var existingChild = currentChildren.find(function(child) {
+    var existingChild = currentChildren.find(function(child) { //if an id or a child already exists
       return child.dataset.id === String(item.id);
     });
 
@@ -69,3 +70,6 @@ window.setInterval(() => {
 
   createDomElements(todos)
 }, 5000)
+
+//this is a better way to create a reconciler ,find the diff and then update thte diffrences 
+//it only applies diffs to tthe dom and does  not reset the dom
