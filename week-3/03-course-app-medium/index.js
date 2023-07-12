@@ -12,9 +12,25 @@ let ADMINS = [];
 let USERS = [];
 let COURSES = [];
 
+var SECRET_KEY = "MySecretCode"
+
+
 // Admin routes
 app.post('/admin/signup', (req, res) => {
   // logic to sign up admin
+  var {username,password}= req.body;
+  var exist = ADMINS.find(a=>a.username === username)
+  if(exist){
+    res.status(404).send({message:`Admin Already Exists`});
+  }
+  else{
+    const admin = {username,password}
+    ADMINS.push(admin);
+    fs.writeFileSync("admins.json", JSON.stringify(ADMINS))
+    const token = jwt.sign({username , role:'admin'},SECRET_KEY,{expiresIn:'1h'})
+    res.status(200).json({message:`Admin Created Successfully`,token})
+
+  }
 });
 
 app.post('/admin/login', (req, res) => {
