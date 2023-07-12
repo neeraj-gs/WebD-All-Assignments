@@ -35,6 +35,12 @@ app.post('/admin/signup', (req, res) => {
 
 app.post('/admin/login', (req, res) => {
   // logic to log in admin
+  const {username,password} = req.headers;
+  const ad = ADMINS.find(a=>a.username === username && a.password ===password)
+  if(ad){
+    const token = jwt.sign({username ,role:'admin'},SECRET_KEY,{expiresIn:'1h'})
+    res.status(200).json({message:`Logged in Successfully`,token})
+  }
 });
 
 app.post('/admin/courses', (req, res) => {
