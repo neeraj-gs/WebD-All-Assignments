@@ -76,11 +76,36 @@ window.setInterval(() => {
       })
     }
   
-    updateVirtualDom(todos);
+    updateVirtualDom(todos); //upates virtual dom
   }, 5000);
 
 window.setInterval(() => {
-    createDomElements();
+    createDomElements(); //actually update it
 }, 1000);
 
 
+//Why Virtual Dom was introduced?
+/* 
+In react there is a virtual dom taht can be easily translated as it si in a varible as state varaibles adn not as dom eleemns
+Virtul dom because it is not the actual heavey ,expensive one it is sa copy of varibles
+IN react Vdom is a very complex tree likeobject , in-mermoy rep os how dom looks likw
+React main is to Manipualte dom and do diffs check 
+
+  At multiple times we give ste and diffs , it dosent ahve ot copy dom everytime 
+  So it maintains  an inmemory virtaul dom  
+    It compares curect state to virtual dom finds diffs and then changes based on the diffs
+
+    Mild Optimization from getting Vdom 
+    It is very USeful , removes the overhead ot get teh current dom 
+
+    at any time Virtual DOM is the current representaion of teh dom 
+      So we can DO Batch Updates
+        Any time an upadte happens we take it to dom
+          What if we could batch this upadte 
+            We can find diffs calcualte chagnes in bulk as the state changes and tehn aplly tehm otgether to teh amin dom 
+              THisis the main optimiation in reactjs
+          
+  Barching Updates is one most imporatnt one react does
+  
+
+*/
