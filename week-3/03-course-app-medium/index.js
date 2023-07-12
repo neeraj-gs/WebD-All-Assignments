@@ -151,6 +151,12 @@ app.post('/users/courses/:courseId',authenticateJwt, (req, res) => {
 
 app.get('/users/purchasedCourses', (req, res) => {
   // logic to view purchased courses
+  const user = USERS.find(u => u.username === req.user.username);
+  if (user) {
+    res.json({ purchasedCourses: user.purchasedCourses || [] });
+  } else {
+    res.status(403).json({ message: 'User not found' });
+  }
 });
 
 app.listen(port, () => {
