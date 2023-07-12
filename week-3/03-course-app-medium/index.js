@@ -62,6 +62,11 @@ app.post('/admin/login', (req, res) => {
 
 app.post('/admin/courses', authenticateJwt,(req, res) => {
   // logic to create a course
+  const course = req.body;
+  course.id=COURSES.length +1;
+  COURSES.push(course);
+  fs.writeFileSync("courses.json",JSON.stringify(course));
+  res.status(200).json({message:`Course Created Successfully`,courseID:course.if})
 });
 
 app.put('/admin/courses/:courseId', (req, res) => {
