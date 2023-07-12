@@ -128,8 +128,25 @@ app.get('/users/courses',authenticateJwt, (req, res) => {
 
 });
 
-app.post('/users/courses/:courseId', (req, res) => {
+app.post('/users/courses/:courseId',authenticateJwt, (req, res) => {
   // logic to purchase a course
+  const course = COURSES.find(c => c.id === parseInt(req.params.courseId));
+  if (course) {
+    const user = USERS.find(u => u.username === req.user.username);
+    if (user) {
+      if (!user.purchasedCourses) {
+        user.purchasedCourses = [];
+      }
+      user.purchasedCourses.push(course);
+      fs.writeFileSync('users.json', JSON.stringify(USERS));
+      res.json({ message: 'Course purchased successfully' });
+    } else {
+      res.status(403).json({ message: 'User not found' });
+    }
+  } else {
+    res.status(404).json({ message: 'Course not found' });
+  }
+
 });
 
 app.get('/users/purchasedCourses', (req, res) => {
