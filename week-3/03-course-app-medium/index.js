@@ -69,7 +69,7 @@ app.post('/admin/courses', authenticateJwt,(req, res) => {
   res.status(200).json({message:`Course Created Successfully`,courseID:course.if})
 });
 
-app.put('/admin/courses/:courseId', (req, res) => {
+app.put('/admin/courses/:courseId', authenticateJwt , (req, res) => {
   // logic to edit a course
   const course = COURSES.find(c => c.id === parseInt(req.params.courseId));
   if (course) {
@@ -82,8 +82,15 @@ app.put('/admin/courses/:courseId', (req, res) => {
   
 });
 
-app.get('/admin/courses', (req, res) => {
+app.get('/admin/courses', authenticateJwt , (req, res) => {
   // logic to get all courses
+  fs.readFileSync("courses.json","utf-8",(err,data)=>{
+    if(err) throw err;
+    else{
+      res.json({courses: COURSES})
+    }
+  })
+  
 });
 
 // User routes
