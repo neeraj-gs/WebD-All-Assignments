@@ -8,6 +8,12 @@ const port = 3000;
 app.use(express.json());
 app.use(bodyParser.json())
 
+// Define mongoose schemas
+const userSchema = new mongoose.Schema({
+  username: {type: String},
+  password: String,
+  purchasedCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }] //Simialr to foreign key as in sql
+});
 
 const SECRET = "SecretKey";
 
