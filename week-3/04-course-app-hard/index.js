@@ -15,6 +15,9 @@ let ADMINS = [];
 let USERS = [];
 let COURSES = [];
 
+
+mongoose.connect('mongodb+srv://neerajgs:Neeraj@123@cluster0.avedxvy.mongodb.net/')
+
 // Admin routes
 app.post('/admin/signup', (req, res) => {
   // logic to sign up admin
