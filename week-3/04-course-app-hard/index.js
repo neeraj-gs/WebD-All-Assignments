@@ -10,10 +10,29 @@ app.use(bodyParser.json())
 
 // Define mongoose schemas
 const userSchema = new mongoose.Schema({
-  username: {type: String},
+  username: {type: String}, //can also just mention String , but for purchsed course type has to be used
   password: String,
   purchasedCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }] //Simialr to foreign key as in sql
 });
+
+const adminSchema = new mongoose.Schema({
+  username:String,
+  password:String
+})
+
+const coursesSchema = new mongoose.Schema({
+  title: String,
+  description: String,
+  price: Number,
+  imageLink: String,
+  published: Boolean
+})
+
+// Define mongoose models
+const User = mongoose.model('User', userSchema);
+const Admin = mongoose.model('Admin', adminSchema);
+const Course = mongoose.model('Course', courseSchema);
+
 
 const SECRET = "SecretKey";
 
