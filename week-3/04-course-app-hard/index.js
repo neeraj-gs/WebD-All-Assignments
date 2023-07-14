@@ -1,7 +1,15 @@
 const express = require('express');
+const jwt = require('jsonwebtoken')
+const mongoose = require('mongoose')
+const bodyParser = require('body-parser')
 const app = express();
+const port = 3000;
 
 app.use(express.json());
+app.use(bodyParser.json())
+
+
+const SECRET = "SecretKey";
 
 let ADMINS = [];
 let USERS = [];
@@ -49,6 +57,6 @@ app.get('/users/purchasedCourses', (req, res) => {
   // logic to view purchased courses
 });
 
-app.listen(3000, () => {
+app.listen(port, () => {
   console.log('Server is listening on port 3000');
 });
