@@ -29,8 +29,8 @@ const coursesSchema = new mongoose.Schema({
 })
 
 // Define mongoose models
-const User = mongoose.model('User', userSchema);
-const Admin = mongoose.model('Admin', adminSchema);
+const User = mongoose.model('User', userSchema); //Colelction name is nothgin but a table in sql
+const Admin = mongoose.model('Admin', adminSchema); //schema defiens the columsn adn types of specific tables as in sql
 const Course = mongoose.model('Course', courseSchema);
 
 
