@@ -8,6 +8,28 @@ const port = 3000;
 app.use(express.json());
 app.use(bodyParser.json())
 
+
+const authenticateJwt = (req,res,next)=>{
+  const authHeader = req.headers.authorization;
+  if(authHeader){
+    const token = authHeader.split(' ')[1];
+    jwt.verify(token,SECRET,(err,user)=>{
+      if(err){
+        return res.status(404);
+      }
+      else{
+        req.user = user;
+        next();
+      }
+    })
+  }
+  else{
+    res.sendStatus(401);
+  }
+
+}
+
+
 // Define mongoose schemas
 const userSchema = new mongoose.Schema({
   username: {type: String}, //can also just mention String , but for purchsed course type has to be used
