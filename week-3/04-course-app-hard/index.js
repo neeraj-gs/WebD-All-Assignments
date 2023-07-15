@@ -31,21 +31,34 @@ const coursesSchema = new mongoose.Schema({
 // Define mongoose models
 const User = mongoose.model('User', userSchema); //Colelction name is nothgin but a table in sql
 const Admin = mongoose.model('Admin', adminSchema); //schema defiens the columsn adn types of specific tables as in sql
-const Course = mongoose.model('Course', courseSchema);
+const Course = mongoose.model('Course', coursesSchema);
 
 
 const SECRET = "SecretKey";
 
-let ADMINS = [];
-let USERS = [];
-let COURSES = [];
 
 
-mongoose.connect('mongodb+srv://neerajgs:Neeraj@123@cluster0.avedxvy.mongodb.net/')
+mongoose.connect('mongodb+srv://neerajgs:Neeraj@123@cluster0.avedxvy.mongodb.net/Courses',{ useNewUrlParser: true, useUnifiedTopology: true, dbName: "Courses" });
+
 
 // Admin routes
 app.post('/admin/signup', (req, res) => {
   // logic to sign up admin
+  var {username,password} = req.body;
+  Admin.findOne({username}).then((admin)=>{
+    if(admin){
+      res.status(403).json({message:`Admin Already Exists`})
+    }
+    else{
+      const newAdmin = new Admin({username,password});
+      newAdmin.save();
+      const token = jwt.sign({username,role:'admin'},SECRET,{expiresIn:'1h'})
+      res.json({message:`Admin Created Successfully`,token})
+
+    }
+
+  })
+  
 });
 
 app.post('/admin/login', (req, res) => {
