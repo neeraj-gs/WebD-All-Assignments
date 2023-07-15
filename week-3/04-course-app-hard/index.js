@@ -83,8 +83,17 @@ app.post('/admin/signup', (req, res) => {
   
 });
 
-app.post('/admin/login', (req, res) => {
+app.post('/admin/login',async (req, res) => {
   // logic to log in admin
+  var {username,password} = req.body;
+  var admin = await Admin.findOne({username})
+  if(admin){
+    const token = jwt.sign({username,role:'admin'},SECRET,{expiresIn:'1h'})
+    res.json({message:`Logged in Successfully`,token})
+  }else{
+    res.json({message:`Admin Does not Exist`})
+  }
+
 });
 
 app.post('/admin/courses', (req, res) => {
