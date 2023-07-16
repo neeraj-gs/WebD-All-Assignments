@@ -136,8 +136,16 @@ app.post('/users/signup', async(req, res) => {
   
 });
 
-app.post('/users/login', (req, res) => {
+app.post('/users/login',async (req, res) => {
   // logic to log in user
+  const {username,password} = req.body;
+  const user = await User.findOne({ username, password });
+  if (user) {
+    const token = jwt.sign({ username, role: 'user' }, SECRET, { expiresIn: '1h' });
+    res.json({ message: 'Logged in successfully', token });
+  } else {
+    res.status(403).json({ message: 'Invalid username or password' });
+  }
 });
 
 app.get('/users/courses', (req, res) => {
