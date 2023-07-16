@@ -118,6 +118,8 @@ app.get('/admin/courses', authenticateJwt , async (req, res) => {
   res.json({course})
 });
 
+
+
 // User routes
 app.post('/users/signup', (req, res) => {
   // logic to sign up user
