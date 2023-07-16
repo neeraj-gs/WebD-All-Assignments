@@ -121,8 +121,19 @@ app.get('/admin/courses', authenticateJwt , async (req, res) => {
 
 
 // User routes
-app.post('/users/signup', (req, res) => {
+app.post('/users/signup', async(req, res) => {
   // logic to sign up user
+  const {username,password} = req.body;
+  const user =await User.findOne({username})
+  if(user){
+    res.json({message:`User Already Exists`})
+  }else{
+    const newUser = new User({username,password})
+    await newUser.save()
+    const token = jwt.sign({username,role:'user'},SECRET,{expiresIn:'1h'})
+    res.json({message:`User Created Successfully`,token})
+  }
+  
 });
 
 app.post('/users/login', (req, res) => {
