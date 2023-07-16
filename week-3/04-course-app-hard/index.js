@@ -185,3 +185,5 @@ app.get('/users/purchasedCourses', authenticateJwt , async(req, res) => {
 app.listen(port, () => {
   console.log('Server is listening on port 3000');
 });
+
+
