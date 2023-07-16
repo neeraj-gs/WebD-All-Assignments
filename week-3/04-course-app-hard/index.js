@@ -154,8 +154,22 @@ app.get('/users/courses',authenticateJwt, async (req, res) => {
   res.json({ courses });
 });
 
-app.post('/users/courses/:courseId', (req, res) => {
+app.post('/users/courses/:courseId', authenticateJwt , async(req, res) => {
   // logic to purchase a course
+  const course = await Course.findById(req.params.courseId);
+  console.log(course);
+  if (course) {
+    const user = await User.findOne({ username: req.user.username });
+    if (user) {
+      user.purchasedCourses.push(course);
+      await user.save();
+      res.json({ message: 'Course purchased successfully' });
+    } else {
+      res.status(403).json({ message: 'User not found' });
+    }
+  } else {
+    res.status(404).json({ message: 'Course not found' });
+  }
 });
 
 app.get('/users/purchasedCourses', (req, res) => {
