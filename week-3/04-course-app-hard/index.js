@@ -148,8 +148,10 @@ app.post('/users/login',async (req, res) => {
   }
 });
 
-app.get('/users/courses', (req, res) => {
+app.get('/users/courses',authenticateJwt, async (req, res) => {
   // logic to list all courses
+  const courses = await Course.find({published: true});
+  res.json({ courses });
 });
 
 app.post('/users/courses/:courseId', (req, res) => {
