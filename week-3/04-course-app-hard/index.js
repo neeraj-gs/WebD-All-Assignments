@@ -112,8 +112,10 @@ app.put('/admin/courses/:courseId', authenticateJwt, async (req, res) => {
   }
 });
 
-app.get('/admin/courses', (req, res) => {
+app.get('/admin/courses', authenticateJwt , async (req, res) => {
   // logic to get all courses
+  const course = await Course.find({});  //it will returnt he entire table as there is no specific command or filter to find on
+  res.json({course})
 });
 
 // User routes
